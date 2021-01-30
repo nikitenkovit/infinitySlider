@@ -1,0 +1,19 @@
+{
+  "name": "Slider",
+  "version": "1.0.0",
+  "description": "Infinity slider",
+  "main": "gulpfile.js",
+  "scripts": {
+    "eslint": "eslint js/**/*.js",
+    "test": "npm run eslint",
+    "start": "run gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "7.13.0",
+    "eslint-config-htmlacademy": "0.6.0",
+    "browser-sync": "^2.26.12",
+    "gulp": "^4.0.2"
+  }
+}
