@@ -17,6 +17,7 @@ export class Slider {
     this._sliderNextButton = this._slider.querySelector(`.slider__button--next`);
     this._sliderPrevButton = this._slider.querySelector(`.slider__button--prev`);
 
+    this._isMoved = false;
     this._sliderDirection = DIRECTION.RIGHT;
     this._sliderCildren = this._sliderList.children;
     this._sliderStep = this._sliderItem.offsetWidth * AMOUNT_OF_ELEMENTS_TO_SLIDE;
@@ -106,28 +107,37 @@ export class Slider {
     });
   }
 
+  _resetToDefault() {
+    this._replaceItems(this._sliderDirection === DIRECTION.LEFT
+      ? POSITION.START
+      : POSITION.END);
+
+    this._slider.classList.remove(`slider--in-move`);
+    this._sliderList.style.transition = `none`;
+    this._setTransform(0);
+    setTimeout(() => {
+      this._sliderList.style.transition = DEFAULT_TRANSITION;
+      this._isMoved = false;
+    });
+  }
+
   _setTransitionEndHandler() {
     this._sliderList.addEventListener(`transitionend`, (evt) => {
       if (evt.target === this._sliderList) {
-        this._replaceItems(this._sliderDirection === DIRECTION.LEFT
-          ? POSITION.START
-          : POSITION.END);
-
-        this._slider.classList.remove(`slider--in-move`);
-        this._sliderList.style.transition = `none`;
-        this._setTransform(0);
-        setTimeout(() => {
-          this._sliderList.style.transition = DEFAULT_TRANSITION;
-        });
+        this._resetToDefault();
       }
     });
   }
 
   _setTouchStartHandler() {
     this._sliderList.addEventListener(`touchstart`, (evt) => {
-      debounce(
-          touchStart(evt, this._sliderList,
-              this._moveNext, this._movePrev), BUTTON_DEBOUNCE_INTERVAL);
+      if (!this._isMoved) {
+        debounce(
+            touchStart(evt, this._sliderList,
+                this._moveNext, this._movePrev), BUTTON_DEBOUNCE_INTERVAL);
+
+        this._isMoved = true;
+      }
     });
   }
 }
